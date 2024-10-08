@@ -1,5 +1,9 @@
 import { FormEvent, useEffect, useState } from "react";
-import { getAllUsers, registerUser } from "../../services/user.service";
+import {
+  getAllUsers,
+  registerUser,
+  updateUser,
+} from "../../services/user.service";
 
 function Home() {
   interface User {
@@ -14,11 +18,37 @@ function Home() {
     password: "",
   });
 
+  const [updateUserData, setUpdateUserData] = useState({
+    updateName: "",
+    updateEmail: "",
+    updatePassword: "",
+    updateUserId: "",
+  });
+
   const [userDataInDb, setUserDataInDb] = useState([]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     registerUser(userData);
+  };
+
+  const handleUpdate = (e: FormEvent) => {
+    e.preventDefault();
+
+    const { updateUserId, updateName, updateEmail, updatePassword } =
+      updateUserData;
+
+    if (!updateUserId) {
+      alert("User ID is required");
+    }
+
+    if (updateUserId) {
+      updateUser(updateUserData.updateUserId, {
+        name: updateName,
+        email: updateEmail,
+        password: updatePassword,
+      });
+    }
   };
 
   useEffect(() => {
@@ -37,20 +67,10 @@ function Home() {
   }, []);
 
   return (
-    <div
-      style={{
-        padding: "20px",
-      }}
-    >
+    <div className="main-container">
       {/* user form */}
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          gap: "20px",
-          marginBottom: "20px",
-        }}
-      >
+      <p className="title">Create User</p>
+      <form onSubmit={handleSubmit} className="form">
         <input
           type="text"
           name="name"
@@ -78,16 +98,77 @@ function Home() {
           }}
           value={userData.password}
         />
-        <button type="submit" style={{ padding: "5px 10px" }}>
+        <button type="submit" className="button">
           Submit
         </button>
       </form>
 
+      <hr className="separator-x" />
+
       {/* user details */}
-      <p>User Data</p>
+      <p className="title">User Data</p>
       {userDataInDb?.map((user: User) => {
-        return <p key={user["_id"]}>{user?.name}</p>;
+        return <p key={user["_id"]}>{`${user?.name} - ${user._id}`}</p>;
       })}
+
+      <hr className="separator-x" />
+
+      <p className="title">Update user</p>
+      <form onSubmit={handleUpdate} className="form">
+        <input
+          type="text"
+          name="updateUserId"
+          placeholder="Enter ID"
+          onChange={(e) => {
+            setUpdateUserData((prev) => ({
+              ...prev,
+              updateUserId: e.target.value,
+            }));
+          }}
+          value={updateUserData.updateUserId}
+        />
+        <input
+          type="text"
+          name="updateName"
+          placeholder="Enter Name"
+          onChange={(e) => {
+            setUpdateUserData((prev) => ({
+              ...prev,
+              updateName: e.target.value,
+            }));
+          }}
+          value={updateUserData.updateName}
+        />
+        <input
+          type="email"
+          name="updateEmail"
+          placeholder="Enter Email"
+          onChange={(e) => {
+            setUpdateUserData((prev) => ({
+              ...prev,
+              updateEmail: e.target.value,
+            }));
+          }}
+          value={updateUserData.updateEmail}
+        />
+        <input
+          type="password"
+          name="updatePassword"
+          placeholder="Enter Password"
+          onChange={(e) => {
+            setUpdateUserData((prev) => ({
+              ...prev,
+              updatePassword: e.target.value,
+            }));
+          }}
+          value={updateUserData.updatePassword}
+        />
+        <button type="submit" className="button">
+          Update
+        </button>
+      </form>
+
+      <hr className="separator-x" />
     </div>
   );
 }

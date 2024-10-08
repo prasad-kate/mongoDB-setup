@@ -1,5 +1,9 @@
 import express from "express";
-import { getAllUsers, registerUser } from "../controllers/userController";
+import {
+  getAllUsers,
+  registerUser,
+  updateUser,
+} from "../controllers/userController";
 
 const router = express.Router();
 
@@ -8,5 +12,6 @@ router.get("/", getAllUsers);
 
 // Create a new user
 router.post("/register", registerUser);
+router.patch("/:id", updateUser);
 
 export default router;

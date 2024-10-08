@@ -3,3 +3,25 @@
   margin: 0;
   padding: 0;
 }
+
+.main-container {
+  padding: 20px;
+}
+
+.separator-x {
+  margin: 20px 0;
+}
+
+.title {
+  margin-bottom: 5px;
+}
+
+.form {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.button {
+  padding: 5px 10px;
+}
